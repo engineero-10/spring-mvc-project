@@ -4,6 +4,7 @@ import org.example.springmvcproject.entity.Student;
 import org.example.springmvcproject.repository.StudentRepository;
 import org.example.springmvcproject.scopes.SessionInstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class StudentServices {
         student.setInstructor(existing.getInstructor());
         return studentRepository.save(student);
     }
-
+    @Transactional
     public void deleteStudent(int id) {
         var existing = getStudentById(id);
         if (existing != null) {
