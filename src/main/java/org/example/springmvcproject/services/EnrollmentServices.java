@@ -4,6 +4,7 @@ import org.example.springmvcproject.entity.Enrollment;
 import org.example.springmvcproject.repository.EnrollmentRepository;
 import org.example.springmvcproject.scopes.SessionInstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class EnrollmentServices {
         return enrollments != null;
     }
 
+    @Transactional
     public void deleteEnrollment(int id) {
         var instructor = sessionInstructor.getInstructor();
         if (instructor == null) {
