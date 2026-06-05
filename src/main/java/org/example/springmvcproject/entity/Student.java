@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,7 +21,9 @@ public class Student {
 
     private String name;
     private String email;
-
     @OneToMany(mappedBy = "student")
     private List<Enrollment> enrollments;
+    @ManyToOne()
+    @JoinColumn(name = "instructor_id")
+    private Instructor instructor;
 }

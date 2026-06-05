@@ -10,12 +10,14 @@
             /* نفس خلفية أزرق داكن جداً (Midnight Blue) */
             background-color: #0b1426;
         }
+
         /* تصميم الـ Navbar العلوي المشترك */
         .navbar {
             background-color: #13223f !important;
             border-bottom: 1px solid #1e2d4a;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
         }
+
         /* تصميم بطاقة الفورم */
         .card {
             border: 1px solid #1e2d4a;
@@ -23,18 +25,21 @@
             background-color: #13223f;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
+
         /* تنسيق حقول الإدخال والقوائم المنسدلة */
         .form-control, .form-select {
             background-color: #1a2f56;
             border-color: #26437a;
             color: #ffffff;
         }
+
         .form-control:focus, .form-select:focus {
             background-color: #1e3663;
             border-color: #3b82f6;
             box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
             color: #ffffff;
         }
+
         /* حقول القراءة فقط */
         .form-control-plaintext {
             color: #0dcaf0;
@@ -44,11 +49,13 @@
             border-radius: 8px;
             border: 1px dashed #26437a;
         }
+
         .nav-link {
             color: #94a3b8 !important;
             font-weight: 500;
             transition: color 0.3s ease;
         }
+
         .nav-link:hover, .nav-link.active {
             color: #0dcaf0 !important;
         }
@@ -60,7 +67,8 @@
     <div class="container">
         <a class="navbar-brand fw-bold text-info fs-4" th:href="@{/home}">Courseify</a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -95,9 +103,11 @@
 
             <div class="card p-4">
                 <h3 class="text-center mb-2 text-info fw-bold">Update Enrollment Record</h3>
-                <p class="text-center text-muted small mb-4" th:text="'Editing Record ID: #' + ${enrollment.id}">Editing Record ID: #0</p>
+                <p class="text-center text-muted small mb-4" th:text="'Editing Record ID: #' + ${enrollment.id}">Editing
+                    Record ID: #0</p>
 
-                <form th:action="@{/enrollments/update/{id}(id=${enrollment.id})}" th:object="${enrollment}" method="POST">
+                <form th:action="@{/enrollments/update/{id}(id=${enrollment.id})}" th:object="${enrollment}"
+                      method="POST">
 
                     <input type="hidden" th:field="*{id}">
                     <input type="hidden" th:field="*{enrollmentDate}">
@@ -106,17 +116,22 @@
 
                     <div class="mb-3">
                         <label class="form-label fw-semibold text-light">Enrolled Student</label>
-                        <div class="form-control-plaintext p-2" th:text="${enrollment.student.name} + ' (' + ${enrollment.student.email} + ')'">John Doe</div>
+                        <div class="form-control-plaintext p-2"
+                             th:text="${enrollment.student.name} + ' (' + ${enrollment.student.email} + ')'">John Doe
+                        </div>
                     </div>
 
                     <div class="mb-4">
                         <label class="form-label fw-semibold text-light">Course</label>
-                        <div class="form-control-plaintext p-2" th:text="${enrollment.course.courseName}">Java Spring Boot</div>
+                        <div class="form-control-plaintext p-2" th:text="${enrollment.course.courseName}">Java Spring
+                            Boot
+                        </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="enrollmentStatus" class="form-label fw-semibold text-light">Enrollment Status</label>
+                            <label for="enrollmentStatus" class="form-label fw-semibold text-light">Enrollment
+                                Status</label>
                             <select th:field="*{enrollmentStatus}" id="enrollmentStatus" class="form-select" required>
                                 <option value="COMPLETED" selected>COMPLETED</option>
                                 <option value="IN_PROGRESS">IN_PROGRESS</option>
@@ -129,7 +144,9 @@
                     <div class="row g-3">
                         <div class="col-sm-6 order-sm-2">
                             <div class="d-grid">
-                                <button type="submit" class="btn btn-warning btn-lg fw-bold shadow-sm text-dark">Update Record</button>
+                                <button type="submit" class="btn btn-warning btn-lg fw-bold shadow-sm text-dark">Update
+                                    Record
+                                </button>
                             </div>
                         </div>
                         <div class="col-sm-6 order-sm-1">

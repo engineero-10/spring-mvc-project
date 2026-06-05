@@ -10,12 +10,14 @@
             /* نفس خلفية أزرق داكن جداً (Midnight Blue) */
             background-color: #0b1426;
         }
+
         /* تصميم الـ Navbar العلوي المشترك */
         .navbar {
             background-color: #13223f !important;
             border-bottom: 1px solid #1e2d4a;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
         }
+
         /* تصميم البطاقة الحاضنة للجدول */
         .card {
             border: 1px solid #1e2d4a;
@@ -23,28 +25,34 @@
             background-color: #13223f;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
+
         /* تنسيق الجدول */
         .table {
             color: #ffffff;
             border-color: #1e2d4a;
         }
+
         .table th {
             background-color: #1a2f56 !important;
             color: #0dcaf0; /* لون أزرق مضيء للعناوين */
             border-bottom: 2px solid #26437a;
         }
+
         .table td {
             background-color: #13223f !important;
             vertical-align: middle;
         }
+
         .table-striped > tbody > tr:nth-of-type(odd) > td {
             background-color: #17284b !important;
         }
+
         .nav-link {
             color: #94a3b8 !important;
             font-weight: 500;
             transition: color 0.3s ease;
         }
+
         .nav-link:hover, .nav-link.active {
             color: #0dcaf0 !important;
         }
@@ -56,7 +64,8 @@
     <div class="container">
         <a class="navbar-brand fw-bold text-info fs-4" th:href="@{/home}">Courseify</a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -72,10 +81,10 @@
                     <a class="nav-link" th:href="@{/students/add}">Add Student</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/enrollments/add}">Enroll Student</a>
+                    <a class="nav-link" th:href="@{/enrollment/add}">Enroll Student</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" th:href="@{/enrollments}">Enrolled List</a>
+                    <a class="nav-link active" th:href="@{/enrollment}">Enrolled List</a>
                 </li>
             </ul>
             <div class="d-flex">
@@ -90,7 +99,8 @@
     <div class="card p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="text-info fw-bold mb-0">Course Enrollment Records</h3>
-            <span class="badge bg-primary px-3 py-2" th:text="${enrollments != null ? enrollments.size() + ' Total Records' : '0 Total Records'}">0 Total Records</span>
+            <span class="badge bg-primary px-3 py-2"
+                  th:text="${enrollments != null ? enrollments.size() + ' Total Records' : '0 Total Records'}">0 Total Records</span>
         </div>
 
         <div class="table-responsive">
@@ -119,19 +129,25 @@
                     <td>
                         <span th:if="${enroll.enrollmentStatus.name() == 'COMPLETED'}" class="badge bg-success">COMPLETED</span>
                         <span th:if="${enroll.enrollmentStatus.name() == 'IN_PROGRESS'}" class="badge bg-primary">IN_PROGRESS</span>
-                        <span th:if="${enroll.enrollmentStatus.name() == 'FAILED'}" class="badge bg-danger">FAILED</span>
+                        <span th:if="${enroll.enrollmentStatus.name() == 'FAILED'}"
+                              class="badge bg-danger">FAILED</span>
                     </td>
 
                     <td class="text-center">
                         <div class="btn-group" role="group">
-                            <a th:href="@{/enrollments/update/{id}(id=${enroll.id})}" class="btn btn-sm btn-outline-warning fw-semibold px-3">Update</a>
-                            <a th:href="@{/enrollments/delete/{id}(id=${enroll.id})}" class="btn btn-sm btn-outline-danger fw-semibold px-3" onclick="return confirm('Are you sure you want to remove this student from this course?')">Delete</a>
+                            <a th:href="@{/enrollment/update/{id}(id=${enroll.id})}"
+                               class="btn btn-sm btn-outline-warning fw-semibold px-3">Update</a>
+                            <a th:href="@{/enrollment/delete/{id}(id=${enroll.id})}"
+                               class="btn btn-sm btn-outline-danger fw-semibold px-3"
+                               onclick="return confirm('Are you sure you want to remove this student from this course?')">Delete</a>
                         </div>
                     </td>
                 </tr>
 
                 <tr th:if="${enrollments == null || enrollments.isEmpty()}">
-                    <td colspan="7" class="text-center text-muted py-4">No enrollment records found. Click "Enroll Student" to create one.</td>
+                    <td colspan="7" class="text-center text-muted py-4">No enrollment records found. Click "Enroll
+                        Student" to create one.
+                    </td>
                 </tr>
                 </tbody>
             </table>

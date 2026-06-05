@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,6 +26,8 @@ public class Instructor {
     @Enumerated(EnumType.STRING)
     private Specialization specialization;
     private String password;
+    @OneToMany(mappedBy = "instructor")
+    private List<Student> students;
 
     public String getPassword() {
         return password;

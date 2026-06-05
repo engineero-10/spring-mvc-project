@@ -11,21 +11,34 @@ import java.util.List;
 public class CourseServices {
     private final CourseRepository courseRepository;
     private final SessionInstructor sessionInstructor;
-    public CourseServices(CourseRepository courseRepository , SessionInstructor sessionInstructor) {
+
+    public CourseServices(CourseRepository courseRepository, SessionInstructor sessionInstructor) {
         this.courseRepository = courseRepository;
         this.sessionInstructor = sessionInstructor;
     }
 
-    public Course addCourse(Course course){
-       var courseEntity = courseRepository.findByCourseName(course.getCourseName());
-       if(courseEntity == null){
-           course.setInstructor(sessionInstructor.getInstructor());
-           return courseRepository.save(course);
-       }
-       return null;
+    public Course addCourse(Course course) {
+        var courseEntity = courseRepository.findByCourseName(course.getCourseName());
+        if (courseEntity == null) {
+            course.setInstructor(sessionInstructor.getInstructor());
+            return courseRepository.save(course);
+        }
+        return null;
     }
 
-    public List<Course> getAllCourses(){
+    public Course getCourseById(int id) {
+        return courseRepository.findById(id).orElse(null);
+    }
+
+    public List<Course> getAllCourses() {
         return courseRepository.findAll();
+    }
+
+    public Course updateCourse(Course course) {
+        return courseRepository.save(course);
+    }
+
+    public void deleteCourse(int id) {
+        courseRepository.deleteById(id);
     }
 }

@@ -1,9 +1,9 @@
 package org.example.springmvcproject.scopes;
 
 import org.example.springmvcproject.entity.Instructor;
-import org.example.springmvcproject.entity.Specialization;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
+
 @Component
 @SessionScope
 public class SessionInstructor {

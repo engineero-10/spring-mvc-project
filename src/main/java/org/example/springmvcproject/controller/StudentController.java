@@ -4,18 +4,17 @@ import org.example.springmvcproject.entity.Student;
 import org.example.springmvcproject.services.StudentServices;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("students")
 public class StudentController {
     private final StudentServices studentServices;
+
     public StudentController(StudentServices studentServices) {
         this.studentServices = studentServices;
     }
+
     @GetMapping("/add")
     public String loadStudentForm(Model model) {
         model.addAttribute("student", new Student());
@@ -23,12 +22,38 @@ public class StudentController {
     }
 
     @PostMapping("/add")
-    public String addStudent(@ModelAttribute Student student, Model model) {
-        var newStudent = studentServices.addStudent(student);
-        if (newStudent == null) {
+    public String addStudent(@ModelAttribute Student student,
+                             Model model) {
+        var student1 = studentServices.addStudent(student);
+        if (student1 == null) {
             model.addAttribute("error", true);
             return "addStudent";
         }
+        return "redirect:/home";
+    }
+
+    @GetMapping("/update/{id}")
+    public String showUpdateForm(@PathVariable("id") int id, Model model) {
+        Student existingStudent = studentServices.getStudentById(id);
+        model.addAttribute("student", existingStudent);
+        return "addStudent";
+    }
+
+    @PostMapping("/update/{id}")
+    public String updateStudent(@PathVariable("id") int id, @ModelAttribute Student student, Model model) {
+        student.setId(id);
+
+        var updatedStudent = studentServices.updateStudent(student);
+        if (updatedStudent == null) {
+            model.addAttribute("error", true);
+            return "addStudent";
+        }
+        return "redirect:/home";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteStudent(@PathVariable("id") int id, Model model) {
+        studentServices.deleteStudent(id);
         return "redirect:/home";
     }
 }

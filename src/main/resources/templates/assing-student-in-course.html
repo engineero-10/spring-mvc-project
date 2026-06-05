@@ -3,48 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course Management - Course Enrollment</title>
+    <title th:text="${enrollment.id > 0} ? 'Courseify - Update Enrollment' : 'Courseify - Course Enrollment'">Courseify
+        - Course Enrollment</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+
     <style>
         body {
-            /* نفس خلفية أزرق داكن جداً (Midnight Blue) */
             background-color: #0b1426;
         }
-        /* تصميم الـ Navbar العلوي المشترك */
+
         .navbar {
             background-color: #13223f !important;
             border-bottom: 1px solid #1e2d4a;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
         }
-        /* تصميم بطاقة الفورم */
+
         .card {
             border: 1px solid #1e2d4a;
             border-radius: 16px;
             background-color: #13223f;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
-        /* تنسيق حقول الإدخال والقوائم المنسدلة */
+
         .form-control, .form-select {
             background-color: #1a2f56;
             border-color: #26437a;
             color: #ffffff;
         }
+
         .form-control::placeholder {
             color: #7a94c5;
         }
+
         .form-control:focus, .form-select:focus {
             background-color: #1e3663;
             border-color: #3b82f6;
             box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
             color: #ffffff;
         }
+
         .nav-link {
             color: #94a3b8 !important;
             font-weight: 500;
             transition: color 0.3s ease;
         }
+
         .nav-link:hover, .nav-link.active {
             color: #0dcaf0 !important;
+        }
+
+        /* تخصيص Tom Select للوضع الداكن */
+        .ts-control {
+            background-color: #1a2f56 !important;
+            border-color: #26437a !important;
+            color: #ffffff !important;
+            border-radius: 6px;
+        }
+
+        .ts-control input {
+            color: #ffffff !important;
+        }
+
+        .ts-dropdown {
+            background-color: #13223f !important;
+            border-color: #26437a !important;
+            color: #ffffff !important;
+        }
+
+        .ts-dropdown .option {
+            color: #ffffff !important;
+        }
+
+        .ts-dropdown .active {
+            background-color: #1e3663 !important;
+            color: #0dcaf0 !important;
+        }
+
+        .ts-control .optgroup-header, .ts-dropdown .optgroup-header {
+            background-color: #13223f !important;
         }
     </style>
 </head>
@@ -54,24 +91,17 @@
     <div class="container">
         <a class="navbar-brand fw-bold text-info fs-4" th:href="@{/home}">Courseify</a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-4">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/home}">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/courses/add}">Add Course</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/students/add}">Add Student</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" th:href="@{/enrollments/add}">Enroll Student</a>
-                </li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/home}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/courses/add}">Add Course</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/students/add}">Add Student</a></li>
+                <li class="nav-item"><a class="nav-link active" th:href="@{/enrollment/add}">Enroll Student</a></li>
             </ul>
             <div class="d-flex">
                 <a th:href="@{/logout}" class="btn btn-danger fw-bold shadow-sm px-4">Logout</a>
@@ -84,44 +114,70 @@
     <div class="row justify-content-center">
         <div class="col-md-7">
 
-            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show shadow-sm border-0 bg-danger bg-opacity-25 text-danger-light" role="alert">
+            <div th:if="${error}"
+                 class="alert alert-danger alert-dismissible fade show shadow-sm border-0 bg-danger bg-opacity-25 text-danger-light"
+                 role="alert">
                 <span th:text="${error}">This student is already enrolled in this course!</span>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
 
             <div class="card p-4">
-                <h3 class="text-center mb-4 text-info fw-bold">Enroll Student in Course</h3>
-                <p class="text-center text-muted small mb-4">Select a student and link them to an available course with their initial progress status.</p>
+                <h3 class="text-center mb-4 text-info fw-bold"
+                    th:text="${enrollment.id > 0} ? 'Update Enrollment Details' : 'Enroll Student in Course'">
+                    Enroll Student in Course
+                </h3>
+                <p class="text-center text-muted small mb-4"
+                   th:text="${enrollment.id > 0} ? 'Modify the selected student, course, or completion status below.' : 'Select a student and link them to an available course with their initial progress status.'">
+                    Select a student and link them to an available course with their initial progress status.
+                </p>
 
-                <form th:action="@{/enrollments/add}" th:object="${enrollment}" method="POST">
+                <form th:action="${enrollment.id > 0} ? @{/enrollment/update/{id}(id=${enrollment.id})} : @{/enrollment/add}"
+                      th:object="${enrollment}" method="POST">
+
+                    <input type="hidden" th:field="*{id}" th:if="${enrollment.id > 0}">
 
                     <div class="mb-3">
-                        <label for="student" class="form-label fw-semibold text-light">Select Student</label>
-                        <select th:field="*{student}" id="student" class="form-select" required>
-                            <option value="" selected disabled>-- Choose a Student --</option>
+                        <label for="student" class="form-label fw-semibold text-light">Select Student
+                            (Searchable)</label>
+                        <select th:field="*{student}" id="student" class="search-select" required>
+                            <option value="">-- Type to Search a Student --</option>
                             <option th:each="std : ${studentsList}"
                                     th:value="${std.id}"
-                                    th:text="${std.name} + ' (' + ${std.email} + ')'">John Doe (john@example.com)</option>
+                                    th:text="${std.name} + ' (' + ${std.email} + ')'"
+                                    th:selected="${enrollment.student != null and enrollment.student.id == std.id}">
+                                John Doe (john@example.com)
+                            </option>
                         </select>
                     </div>
 
                     <div class="mb-3">
-                        <label for="course" class="form-label fw-semibold text-light">Select Course</label>
-                        <select th:field="*{course}" id="course" class="form-select" required>
-                            <option value="" selected disabled>-- Choose a Course --</option>
+                        <label for="course" class="form-label fw-semibold text-light">Select Course (Searchable)</label>
+                        <select th:field="*{course}" id="course" class="search-select" required>
+                            <option value="">-- Type to Search a Course --</option>
                             <option th:each="crs : ${coursesList}"
                                     th:value="${crs.courseId}"
-                                    th:text="${crs.courseName} + ' - $' + ${crs.price}">Java Spring Boot - $99</option>
+                                    th:text="${crs.courseName} + ' - $' + ${crs.price}"
+                                    th:selected="${enrollment.course != null and enrollment.course.courseId == crs.courseId}">
+                                Java Spring Boot - $99
+                            </option>
                         </select>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="enrollmentStatus" class="form-label fw-semibold text-light">Enrollment Status</label>
+                            <label for="enrollmentStatus" class="form-label fw-semibold text-light">Enrollment
+                                Status</label>
                             <select th:field="*{enrollmentStatus}" id="enrollmentStatus" class="form-select" required>
-                                <option value="COMPLETED" selected>COMPLETED</option>
-                                <option value="IN_PROGRESS">IN_PROGRESS</option>
-                                <option value="FAILED">FAILED</option>
+                                <option value="COMPLETED"
+                                        th:selected="${enrollment.enrollmentStatus?.name() == 'COMPLETED'}">COMPLETED
+                                </option>
+                                <option value="IN_PROGRESS"
+                                        th:selected="${enrollment.enrollmentStatus == null or enrollment.enrollmentStatus?.name() == 'IN_PROGRESS'}">
+                                    IN_PROGRESS
+                                </option>
+                                <option value="FAILED" th:selected="${enrollment.enrollmentStatus?.name() == 'FAILED'}">
+                                    FAILED
+                                </option>
                             </select>
                         </div>
                     </div>
@@ -129,12 +185,16 @@
                     <div class="row g-3">
                         <div class="col-sm-6 order-sm-2">
                             <div class="d-grid">
-                                <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm">Confirm Enrollment</button>
+                                <button type="submit"
+                                        th:class="${enrollment.id > 0} ? 'btn btn-warning btn-lg fw-bold shadow-sm text-dark' : 'btn btn-primary btn-lg fw-bold shadow-sm'"
+                                        th:text="${enrollment.id > 0} ? 'Update Enrollment' : 'Confirm Enrollment'">
+                                    Confirm Enrollment
+                                </button>
                             </div>
                         </div>
                         <div class="col-sm-6 order-sm-1">
                             <div class="d-grid">
-                                <a th:href="@{/home}" class="btn btn-outline-secondary btn-lg fw-bold">Cancel</a>
+                                <a th:href="@{/enrollment}" class="btn btn-outline-secondary btn-lg fw-bold">Cancel</a>
                             </div>
                         </div>
                     </div>
@@ -147,5 +207,18 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+
+<script>
+    document.querySelectorAll('.search-select').forEach((el) => {
+        new TomSelect(el, {
+            create: false,
+            sortField: {
+                field: "text",
+                direction: "asc"
+            }
+        });
+    });
+</script>
 </body>
 </html>

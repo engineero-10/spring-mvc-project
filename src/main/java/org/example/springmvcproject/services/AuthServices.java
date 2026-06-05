@@ -8,34 +8,31 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthServices {
-    private ApplicationInstructor applicationInstructor;
-    private SessionInstructor sessionInstructor;
-    private InstuctorRepository instructorRepository;
-    public AuthServices(ApplicationInstructor applicationInstructor, SessionInstructor sessionInstructor,InstuctorRepository instructorRepository) {
+    private final ApplicationInstructor applicationInstructor;
+    private final SessionInstructor sessionInstructor;
+    private final InstuctorRepository instructorRepository;
+
+    public AuthServices(ApplicationInstructor applicationInstructor, SessionInstructor sessionInstructor, InstuctorRepository instructorRepository) {
         this.applicationInstructor = applicationInstructor;
         this.sessionInstructor = sessionInstructor;
         this.instructorRepository = instructorRepository;
     }
 
     // login logic
-    public boolean login(String email, String password)
-    {
-       var instructor = instructorRepository.findByEmailAndPassword(email,password);
-       if(instructor==null)
-        {
+    public boolean login(String email, String password) {
+        var instructor = instructorRepository.findByEmailAndPassword(email, password);
+        if (instructor == null) {
             return false;
         }
-       sessionInstructor.setInstructor(instructor);
+        sessionInstructor.setInstructor(instructor);
         applicationInstructor.increaseRegisteredNumber();////////////////////
-       return true;
+        return true;
     }
 
     // register logic
-    public boolean register(Instructor instructor)
-    {
+    public boolean register(Instructor instructor) {
         var instructor1 = instructorRepository.findByEmail(instructor.getEmail());
-        if(instructor1!=null)
-        {
+        if (instructor1 != null) {
             return false;
         }
         instructorRepository.save(instructor);
@@ -43,8 +40,7 @@ public class AuthServices {
         return true;
     }
 
-    public void logout()
-    {
+    public void logout() {
         sessionInstructor.setInstructor(null);
         applicationInstructor.decreaseRegisteredNumber();
     }
