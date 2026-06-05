@@ -102,18 +102,18 @@
 
             <div class="card p-4">
                 <h3 class="text-center mb-2 text-info fw-bold"
-                    th:text="${student.id != null} ? 'Update Student Details' : 'Register New Student'">
+                    th:text="${student.id >0} ? 'Update Student Details' : 'Register New Student'">
                     Register New Student
                 </h3>
                 <p class="text-center text-muted small mb-4"
-                   th:text="${student.id != null} ? 'Modify the fields below to update the existing record.' : 'Enter the student\'s personal details to enroll them into the system.'">
+                   th:text="${student.id >0} ? 'Modify the fields below to update the existing record.' : 'Enter the student\'s personal details to enroll them into the system.'">
                     Enter the student's personal details to enroll them into the system.
                 </p>
 
-                <form th:action="${student.id != null} ? @{/students/update/{id}(id=${student.id})} : @{/students/add}"
+                <form th:action="${student.id >0} ? @{/students/update/{id}(id=${student.id})} : @{/students/add}"
                       th:object="${student}" method="POST">
 
-                    <input type="hidden" th:field="*{id}" th:if="${student.id != null}">
+                    <input type="hidden" th:field="*{id}" th:if="${student.id >0}">
 
                     <div class="mb-3">
                         <label for="name" class="form-label fw-semibold text-light">Student Full Name</label>
