@@ -27,18 +27,34 @@ public class CourseServices {
     }
 
     public Course getCourseById(int id) {
-        return courseRepository.findById(id).orElse(null);
+        var instructor = sessionInstructor.getInstructor();
+        if (instructor == null) {
+            return null;
+        }
+        return courseRepository.findByCourseIdAndInstructor_Id(id, instructor.getId());
     }
 
     public List<Course> getAllCourses() {
-        return courseRepository.findAll();
+        var instructor = sessionInstructor.getInstructor();
+        if (instructor == null) {
+            return List.of();
+        }
+        return courseRepository.findAllByInstructor_Id(instructor.getId());
     }
 
     public Course updateCourse(Course course) {
+        var existing = getCourseById(course.getCourseId());
+        if (existing == null) {
+            return null;
+        }
+        course.setInstructor(existing.getInstructor());
         return courseRepository.save(course);
     }
 
     public void deleteCourse(int id) {
-        courseRepository.deleteById(id);
+        var existing = getCourseById(id);
+        if (existing != null) {
+            courseRepository.delete(existing);
+        }
     }
 }

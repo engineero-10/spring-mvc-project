@@ -1,6 +1,5 @@
 package org.example.springmvcproject.services;
 
-import org.example.springmvcproject.entity.Course;
 import org.example.springmvcproject.entity.Student;
 import org.example.springmvcproject.repository.StudentRepository;
 import org.example.springmvcproject.scopes.SessionInstructor;
@@ -19,11 +18,19 @@ public class StudentServices {
     }
 
     public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+        var instructor = sessionInstructor.getInstructor();
+        if (instructor == null) {
+            return List.of();
+        }
+        return studentRepository.findAllByInstructor_Id(instructor.getId());
     }
 
     public Student getStudentById(int id) {
-        return studentRepository.findById(id).orElse(null);
+        var instructor = sessionInstructor.getInstructor();
+        if (instructor == null) {
+            return null;
+        }
+        return studentRepository.findByIdAndInstructor_Id(id, instructor.getId());
     }
 
     public Student addStudent(Student student) {
@@ -36,10 +43,18 @@ public class StudentServices {
     }
 
     public Student updateStudent(Student student) {
+        var existing = getStudentById(student.getId());
+        if (existing == null) {
+            return null;
+        }
+        student.setInstructor(existing.getInstructor());
         return studentRepository.save(student);
     }
 
     public void deleteStudent(int id) {
-        studentRepository.deleteById(id);
+        var existing = getStudentById(id);
+        if (existing != null) {
+            studentRepository.delete(existing);
+        }
     }
 }

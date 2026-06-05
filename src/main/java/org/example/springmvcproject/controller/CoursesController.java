@@ -34,6 +34,9 @@ public class CoursesController {
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable("id") int id, Model model) {
         Course existingCouser = courseServices.getCourseById(id);
+        if (existingCouser == null) {
+            return "redirect:/home";
+        }
         model.addAttribute("course", existingCouser);
         return "addCourse";
     }

@@ -2,6 +2,7 @@ package org.example.springmvcproject.services;
 
 import org.example.springmvcproject.entity.Enrollment;
 import org.example.springmvcproject.repository.EnrollmentRepository;
+import org.example.springmvcproject.scopes.SessionInstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,13 +10,19 @@ import java.util.List;
 @Service
 public class EnrollmentServices {
     private final EnrollmentRepository enrollmentRepository;
+    private final SessionInstructor sessionInstructor;
 
-    public EnrollmentServices(EnrollmentRepository enrollmentRepository) {
+    public EnrollmentServices(EnrollmentRepository enrollmentRepository, SessionInstructor sessionInstructor) {
         this.enrollmentRepository = enrollmentRepository;
+        this.sessionInstructor = sessionInstructor;
     }
 
     public List<Enrollment> getAllEnrollments() {
-        return enrollmentRepository.findAll();
+        var instructor = sessionInstructor.getInstructor();
+        if (instructor == null) {
+            return List.of();
+        }
+        return enrollmentRepository.findAllByCourse_Instructor_Id(instructor.getId());
     }
 
     public boolean checkDuplicateEnrollment(int courseId, int stdId) {
@@ -24,10 +31,18 @@ public class EnrollmentServices {
     }
 
     public void deleteEnrollment(int id) {
-        enrollmentRepository.deleteById(id);
+        var instructor = sessionInstructor.getInstructor();
+        if (instructor == null) {
+            return;
+        }
+        enrollmentRepository.deleteByIdAndCourse_Instructor_Id(id, instructor.getId());
     }
 
     public void updateEnrollment(Enrollment enrollment) {
+        var existing = getEnrollmentById(enrollment.getId());
+        if (existing == null) {
+            return;
+        }
         enrollmentRepository.save(enrollment);
     }
 
@@ -36,7 +51,11 @@ public class EnrollmentServices {
     }
 
     public Enrollment getEnrollmentById(int id) {
-        return enrollmentRepository.findById(id).orElse(null);
+        var instructor = sessionInstructor.getInstructor();
+        if (instructor == null) {
+            return null;
+        }
+        return enrollmentRepository.findByIdAndCourse_Instructor_Id(id, instructor.getId());
     }
 
     public boolean checkDuplicateEnrollmentForUpdate(

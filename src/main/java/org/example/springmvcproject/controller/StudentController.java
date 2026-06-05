@@ -35,6 +35,9 @@ public class StudentController {
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable("id") int id, Model model) {
         Student existingStudent = studentServices.getStudentById(id);
+        if (existingStudent == null) {
+            return "redirect:/home";
+        }
         model.addAttribute("student", existingStudent);
         return "addStudent";
     }

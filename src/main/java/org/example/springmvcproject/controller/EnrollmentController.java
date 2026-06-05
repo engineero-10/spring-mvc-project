@@ -42,6 +42,18 @@ public class EnrollmentController {
 
     @PostMapping("/add")
     public String registerStudentInCourse(@ModelAttribute("enrollment") Enrollment enrollment, Model model) {
+        var selectedStudent = studentServices.getStudentById(enrollment.getStudent().getId());
+        var selectedCourse = courseServices.getCourseById(enrollment.getCourse().getCourseId());
+
+        if (selectedStudent == null || selectedCourse == null) {
+            model.addAttribute("error", "Invalid student or course selection.");
+            model.addAttribute("studentsList", studentServices.getAllStudents());
+            model.addAttribute("coursesList", courseServices.getAllCourses());
+            return "assing-student-in-course";
+        }
+
+        enrollment.setStudent(selectedStudent);
+        enrollment.setCourse(selectedCourse);
         enrollment.setEnrollmentDate(LocalDate.now());
         boolean isAlreadyEnrolled = enrollmentServices.checkDuplicateEnrollment(
                 enrollment.getCourse().getCourseId(),
@@ -61,6 +73,9 @@ public class EnrollmentController {
     @GetMapping("/update/{id}")
     public String showUpdateEnrollmentForm(@PathVariable("id") int id, Model model) {
         Enrollment existingEnrollment = enrollmentServices.getEnrollmentById(id);
+        if (existingEnrollment == null) {
+            return "redirect:/enrollment";
+        }
 
         model.addAttribute("enrollment", existingEnrollment);
         model.addAttribute("studentsList", studentServices.getAllStudents());
@@ -75,7 +90,25 @@ public class EnrollmentController {
             @ModelAttribute("enrollment") Enrollment enrollment,
             Model model) {
 
+        var original = enrollmentServices.getEnrollmentById(id);
+        if (original == null) {
+            return "redirect:/enrollment";
+        }
+
+        var selectedStudent = studentServices.getStudentById(enrollment.getStudent().getId());
+        var selectedCourse = courseServices.getCourseById(enrollment.getCourse().getCourseId());
+
+        if (selectedStudent == null || selectedCourse == null) {
+            model.addAttribute("error", "Invalid student or course selection.");
+            model.addAttribute("enrollment", original);
+            model.addAttribute("studentsList", studentServices.getAllStudents());
+            model.addAttribute("coursesList", courseServices.getAllCourses());
+            return "assing-student-in-course";
+        }
+
         enrollment.setId(id);
+        enrollment.setStudent(selectedStudent);
+        enrollment.setCourse(selectedCourse);
 
         boolean isAlreadyEnrolled =
                 enrollmentServices.checkDuplicateEnrollmentForUpdate(
@@ -96,9 +129,6 @@ public class EnrollmentController {
 
             return "assing-student-in-course";
         }
-
-        Enrollment original =
-                enrollmentServices.getEnrollmentById(id);
 
         if (original != null) {
             enrollment.setEnrollmentDate(

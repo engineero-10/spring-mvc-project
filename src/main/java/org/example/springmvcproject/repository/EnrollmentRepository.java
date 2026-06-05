@@ -4,6 +4,8 @@ import org.example.springmvcproject.entity.Enrollment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface EnrollmentRepository extends JpaRepository<Enrollment, Integer> {
 
@@ -14,4 +16,10 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Integer>
             int courseId,
             int id
     );
+
+    List<Enrollment> findAllByCourse_Instructor_Id(int instructorId);
+
+    Enrollment findByIdAndCourse_Instructor_Id(int id, int instructorId);
+
+    void deleteByIdAndCourse_Instructor_Id(int id, int instructorId);
 }
